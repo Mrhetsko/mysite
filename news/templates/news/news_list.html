@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block title %}
+{{ title }} :: {{ block.super }}
+{% endblock %}
+
+{% block sidebar %}
+{% include 'inc/_sidebar.html' %}
+{% endblock %}
+
+{% block content %}
+
+{% for el in object_list %}
+<div class="card mb-3">
+  <div class="card-header">
+    Категория: <a href="{{ el.category.get_absolute_url }}">{{ el.category }}</a>
+  </div>
+  <div class="card-body">
+    <div class="media">
+      {% if el.photo %}
+      <img src="{{ el.photo.url }}" alt="Article photo" width="350" class="mr-3">
+      {% else %}
+      <img src="https://picsum.photos/id/1060/350/235/?blur=2" alt="Article photo" class="mr-3" >
+      {% endif %}
+      <div class="media-body">
+        <h5 class="card-title">{{ el.title }}</h5>
+        <p class="card-text">{{ el.content|truncatewords:45 }}.</p>
+        <a href="{{ el.get_absolute_url }}" class="btn btn-primary">Read more ...</a>
+      </div>
+    </div>
+  </div>
+  <div class="card-footer text-muted">
+    <p>{{ el.created_at|date:"Y-m-d H:m" }}</p>
+  </div>
+</div>
+{% endfor %}
+
+{% endblock %}
+
