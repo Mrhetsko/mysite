@@ -1,23 +1,12 @@
 {% extends 'base.html' %}
 
 {% block title %}
-  {{ category.title }} :: {{ block.super }}
+    {{ category.title }} :: {{ block.super }}
 {% endblock %}
 
 
-
-<!--Початок № 20-->
-
-
 {% block sidebar %}
-<div class="col-md-12">
-  <div class="list-group">
-
-    {% for el in categories %}
-    <a href="{% url 'category' el.pk %}" class="list-group-item list-group-item-action">{{ el.title }}</a>
-    {% endfor %}
-  </div>
-</div>
+    {% include 'inc/_sidebar.html' %}
 {% endblock %}
 
 {% block content %}
@@ -37,7 +26,7 @@
         <div class="media-body">
           <h5 class="card-title">{{ el.title }}</h5>
           <p class="card-text">{{ el.content|truncatewords:45 }}.</p>
-          <a href="#" class="btn btn-primary">Read more ...</a>
+          <a href="{{ el.get_absolute_url }}" class="btn btn-primary">Read more ...</a>
         </div>
       </div>
     </div>
