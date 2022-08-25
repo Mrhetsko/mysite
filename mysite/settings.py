@@ -27,7 +27,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'news.apps.NewsConfig',
-    "debug_toolbar",
+    'ckeditor',
+    'ckeditor_uploader',
+    'debug_toolbar',
+    'captcha',
 ]
 
 MIDDLEWARE = [
@@ -125,3 +128,19 @@ INTERNAL_IPS = [
     "127.0.0.1",
 
 ]
+
+EMAIL_HOST = 'smtp.seznam.cz'
+EMAIL_PORT = 587 # 2525
+EMAIL_HOST_USER = 'mrhetsko@seznam.cz'
+EMAIL_HOST_PASSWORD = 'Jomajo888'
+EMAIL_USE_TLS = True
+EMAIL_USE_SSL = False
+
+CKEDITOR_UPLOAD_PATH = "uploads/"
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
+        'LOCATION': os.path.join(BASE_DIR, 'django_cash'),
+    }
+}

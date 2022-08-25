@@ -22,9 +22,11 @@
         {% else %}
         <img src="https://picsum.photos/id/1060/350/235/?blur=2" alt="Article photo" class="float-left mr-3" >
         {% endif %}
-        <h5 class="card-title">{{ news_item..title }}</h5>
-        <p class="card-text">{{ news_item.content }}.</p>
-
+            {% autoescape off %}
+            <h5 class="card-title">{{ news_item.title }}</h5>
+            <p class="card-text">
+                {{ news_item.content }}.</p>
+            {% endautoescape %}
     </div>
     <div class="card-footer text-muted">
         <p>{{ news_item.created_at|date:"Y-m-d H:m" }}</p>

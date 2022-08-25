@@ -1,23 +1,25 @@
-from django.shortcuts import render, get_object_or_404, redirect
-from .models import News, Category
-from .forms import NewsForm
-from .forms import UserRegisterForm
-from django.views.generic import ListView, DetailView, CreateView
-from django.urls import reverse_lazy
-from .utils import MyMixin
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.core.paginator import Paginator
-# from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.shortcuts import render, get_object_or_404, redirect
+from django.views.generic import ListView, DetailView, CreateView
+from django.core.mail import send_mail
+from django.core.paginator import Paginator
+from django.contrib.auth import login, logout
+from django.urls import reverse_lazy
+# from django.contrib.auth.forms import UserCreationForm
+from .utils import MyMixin
+from .forms import UserRegisterForm, UserLoginForm, NewsForm, ContactForm
+from .models import News, Category
 
 
 def register(request):
     if request.method == 'POST':
         form = UserRegisterForm(request.POST)
         if form.is_valid():
-            form.save()
+            user = form.save()
+            login(request, user)
             messages.success(request, 'Ві успешно зарегистрировались')
-            return redirect('login_page')
+            return redirect('home')
         else:
             messages.error(request, 'Ошибка регистрации')
 
@@ -27,8 +29,60 @@ def register(request):
     return render(request, 'news/register.html', context)
 
 
-def login(request):
-    return render(request, 'news/login.html')
+def login_page(request):
+    if request.method == 'POST':
+        form = UserLoginForm(data=request.POST)
+        if form.is_valid():
+            user = form.get_user()
+            login(request, user)
+            return redirect('home')
+    else:
+        form = UserLoginForm()
+    context = {'form': form}
+    return render(request, 'news/login.html', context)
+
+
+def contact(request):
+    if request.method == 'POST':
+        form = ContactForm(request.POST)
+        if form.is_valid():
+            mail = send_mail(form.cleaned_data['subject'], form.cleaned_data['content'], 'mrhetsko@seznam.cz',
+                             ['mrhetsko@centrum.cz', 'mrhetsko@gmail.com'], fail_silently=True)
+            print(mail)
+            if mail:
+                messages.success(request, 'Письмо отправлено')
+                return redirect('contact')
+            else:
+                messages.error(request, 'ошибка отправки')
+        else:
+            messages.error(request, 'Ошибка валидации')
+    else:
+        form = ContactForm()
+    return render(request, 'news/test3.html', {'form': form})
+
+
+def user_logout(request):
+    logout(request)
+    return redirect('login_page')
+
+
+def send_my_mail(request):
+    if request.method == 'POST':
+        form = ContactForm(request.POST)
+        if form.is_valid():
+            mail = send_mail(form.cleaned_data['subject'], form.cleaned_data['content'], 'mrhetsko@seznam.cz',
+                             ['mrhetsko@centrum.cz', 'mrhetsko@gmail.com'], fail_silently=False)
+            print(mail)
+            if mail:
+                messages.success(request, 'Письмо отправлено')
+                return redirect('send-mail')
+            else:
+                messages.error(request, 'ошибка отправки')
+        else:
+            messages.error(request, 'Ошибка реестрации')
+    else:
+        form = ContactForm()
+    return render(request, 'news/test2.html', {'form': form})
 
 
 def test(request):
@@ -128,32 +182,3 @@ class CreateNews(LoginRequiredMixin, CreateView):
 #         'form': form,
 #         }
 #     return render(request, 'news/add_news.html', context)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

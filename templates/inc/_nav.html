@@ -9,6 +9,11 @@
         <li class="nav-item">
           <a class="nav-link active" aria-current="page" href="{% url 'home' %}">Главная</a>
         </li>
+
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="{% url 'contact' %}">Контакть</a>
+        </li>
+
         {% if request.user.is_authenticated %}
         <li class="nav-item">
           <a class="nav-link" href="{% url 'add_news' %}">Добавить новость</a>
@@ -17,7 +22,11 @@
 
       </ul>
       <span class="navbar-text">
-        <a href="{% url 'register_page' %}">Register</a> | <a href="{% url 'login_page' %}">Login</a>
+        {% if request.user.is_authenticated %}
+          Добро пожаловать, {{ user.username }} | <a href="{% url 'logout' %}">Вьход</a>
+        {% else %}
+          <a href="{% url 'register_page' %}">Register</a> | <a href="{% url 'login_page' %}">Login</a>
+        {% endif %}
       </span>
     </div>
   </div>
